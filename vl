@@ -4,6 +4,9 @@ import os
 import pyperclip
 import re
 import sys
+from shutil import copyfile
+#from Crypto.Cipher import AES
+import base64
 
 #
 # this script should ...
@@ -13,7 +16,7 @@ import sys
 #
 args       = sys.argv
 vault_file = os.path.expanduser("~/.vl")
-actions    = filter(lambda x: x in ['-i'], args)
+actions    = list(filter(lambda x: x in ['-i', '-e'], args))
 
 def remove_comments(lines):
     pattern = re.compile("^\s*--") 
@@ -40,7 +43,17 @@ def ask(lines):
     else:
         ask(lines)
 
-if('-i' in actions):
+def encode(vault_file, secret_key):
+    print('encoded')
+    # copyfile(vault_file, vault_file + '.bk')
+    # cipher  = crypto.AES.new(secret_key, AES.MODE_ECB)
+    # encoded = base64.b64encode(cipher.encrypt(read_file(vault_file)))
+    # print(encoded)
+
+if('-e' in actions):
+    secret_key = os.path.expanduser('~/.ssh/id_rsa')
+    encode(vault_file, secret_key)
+elif('-i' in actions):
     # interactive mode
     lines = read_file(vault_file)
     print('')
